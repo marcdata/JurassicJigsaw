@@ -1,4 +1,5 @@
 ﻿using JurassicApp.Models;
+using JurassicApp.Models.enums;
 using JurassicApp.Services;
 using System;
 using System.Collections.Generic;
@@ -70,7 +71,7 @@ namespace XUnitTests
 
             var tile1 = new Tile(1, new List<string> { "..#", "..#", "..#" });
             var tile2 = new Tile(2, new List<string> { "#.#", "#.#", "#.#" });
-            var tile3 = new Tile(3, new List<string> { "#..", "#..", "#.." });
+            var tile3 = new Tile(3, new List<string> { "#..", "#..", "#.#" });
 
             var remainingTiles = new List<Tile> { tile2, tile3, };
 
@@ -162,5 +163,86 @@ namespace XUnitTests
 
         }
 
+
+        [Fact]
+        public void TestRotation_Simple1()
+        {
+            // story: 2 tiles, require one tile has to be rotated in order to match up
+
+            // arrange 
+
+            var tile1 = new Tile(1, new List<string> { 
+                "###", 
+                "...", 
+                "..." 
+            });
+
+            // has to be rotated 180 degrees, so it's top side becomes a bottom side
+            var tile2 = new Tile(2, new List<string> { 
+                "###", 
+                "...", 
+                "#.#" });
+
+            var remainingTiles = new List<Tile> { tile2, };
+
+            // arrange - tileFrameSet
+            var startingTileFrame = new TileFrame(tile1);
+            var tileFrameSet = new TileFrameSet(startingTileFrame);
+
+            // act 
+            var searchSucceded = _tileFrameSearchService.FillTileFrameSet(tileFrameSet, remainingTiles);
+
+            // assert
+            Assert.True(searchSucceded);
+            var upperLeftId = tileFrameSet.GetUpperLeftCorner().Tile.TileNumber;
+            var lowerLeftId = tileFrameSet.GetLowerLeftCorner().Tile.TileNumber;
+
+            Assert.Equal(1, lowerLeftId);
+            Assert.Equal(2, upperLeftId);
+
+        }
+
+
+        [Fact]
+        public void TestFlip_Simple()
+        {
+            // story: 2 tiles, require one tile has to be rotated in order to match up
+
+            // arrange 
+
+            var tile1 = new Tile(1, new List<string> {
+                "###",
+                "...",
+                "##."
+            });
+
+            // has to be flipped LR
+            var tile2 = new Tile(2, new List<string> {
+                "###",
+                "...",
+                "#.." });
+
+            // misc, also Tile1, has its Left neighbor set (not null), so it wontmatch on a simpler rotation on that side
+
+            var remainingTiles = new List<Tile> { tile2, };
+
+            // arrange - tileFrameSet
+            var startingTileFrame = new TileFrame(tile1);
+            startingTileFrame.Left = startingTileFrame; // overriding whatever logic used to checkit, so not really valid, just using to prep the test case
+            startingTileFrame.Upper = startingTileFrame;
+
+            // note: setting these dummy neighbors like this, causes bad things when we search for UpperCorner
+
+            var tileFrameSet = new TileFrameSet(startingTileFrame);
+
+            // act 
+            var searchSucceded = _tileFrameSearchService.FillTileFrameSet(tileFrameSet, remainingTiles);
+
+            // assert
+            Assert.True(searchSucceded);
+
+            Assert.Equal(2, startingTileFrame.Right.TileId);
+            Assert.True(startingTileFrame.Right.Tile.LeftExposure.Match(new List<CellValue> { CellValue.Pound, CellValue.Dot, CellValue.Dot }));
+        }
     }
 }

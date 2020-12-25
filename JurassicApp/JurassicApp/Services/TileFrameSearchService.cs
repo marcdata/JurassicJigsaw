@@ -43,9 +43,21 @@ namespace JurassicApp.Services
                 var thisIterationSearchCollection = tileFrameSet.TileFrames.Where(x => x.AnyOpenSides).ToList();
                 foreach (var openFrame in thisIterationSearchCollection)
                 {
-                    if(this.FindMatchingSide(openFrame, tile, out var side))
+                    //if(this.FindMatchingSide(openFrame, tile, out var side))
+                    //{
+                    //    Attach(openFrame, tile, side.Value);
+                    //    // attach to TileFrames
+                    //    tileFrameSet.TileFrames.Add(openFrame.GetNeighbor(side.Value));
+                    //    foundMatch = true;
+
+                    //    // collect dbg statements
+
+                    //    break;
+                    //}
+
+                    if (this.FindMatchingSide(openFrame, tile, out var side, out var tileWithTransforms))
                     {
-                        Attach(openFrame, tile, side.Value);
+                        Attach(openFrame, tileWithTransforms, side.Value);
                         // attach to TileFrames
                         tileFrameSet.TileFrames.Add(openFrame.GetNeighbor(side.Value));
                         foundMatch = true;
@@ -69,6 +81,8 @@ namespace JurassicApp.Services
                 ++iterCount;
             }
 
+            if(iterCount >= maxIter) { throw new InvalidOperationException($"Max iterations reached in search. Num remaining in queue: {tileQueue.Count}"); }
+
             if(tileQueue.Count == 0)
             {
                 return true;
@@ -76,7 +90,54 @@ namespace JurassicApp.Services
             return false;
         }
 
+        private bool FindMatchingSide(TileFrame openFrame, Tile tile, out TileSide? side, out Tile tileWithTransforms)
+        {
+            // if no transforms, then behavior will match the simpler FindMatchingSide & tile in will be the same as tileWithTransforms
 
+            // steps: 
+            // with unrotated, do simpler FindMatchingCase 
+            // over rotations 90, 180, 270, try simpler FindMatchingCase 
+            // over flips (UD, LR), try simpler FindMatchingCase 
+
+            tileWithTransforms = null;
+
+            if (FindMatchingSide(openFrame, tile, out side))
+            {
+                tileWithTransforms = tile;
+                return true;
+            }
+
+            var rotationCounts = new List<int> { 1, 2, 3 };
+            foreach(var rotationNumber in rotationCounts)
+            {
+                var tileWithRotations = Tile.Rotate(tile, rotationNumber);
+
+                if(FindMatchingSide(openFrame, tileWithRotations, out side))
+                {
+                    tileWithTransforms = tileWithRotations;
+                    return true;
+                }
+            }
+
+            // two flips, LR, UD
+
+            var flippedLR = Tile.FlipLR(tile);
+            if(FindMatchingSide(openFrame, flippedLR, out side))
+            {
+                tileWithTransforms = flippedLR;
+                return true;
+            }
+
+            var flippedUD = Tile.FlipUD(tile);
+            if (FindMatchingSide(openFrame, flippedUD, out side))
+            {
+                tileWithTransforms = flippedUD;
+                return true;
+            }
+            return false;
+        }
+
+        // Handles simple case only; no rotations, no flips
         private bool FindMatchingSide(TileFrame openFrame, Tile tile, out TileSide? side)
         {
             // check tileFrame.RightExposure to tile.LeftExposure
