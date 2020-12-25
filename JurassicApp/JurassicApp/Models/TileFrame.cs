@@ -16,6 +16,8 @@ namespace JurassicApp.Models
 
         public bool AnyOpenSides { get { return (Upper == null || Lower == null || Right == null || Left == null); } }
 
+        public (int x, int y) AbsoluteLocation { get; set; }
+
         /// <summary>
         /// Pass-thru TileId. (For easier tracking across layers.)
         /// </summary>
@@ -36,6 +38,18 @@ namespace JurassicApp.Models
                 TileSide.Lower => this.Lower,
                 TileSide.Right => this.Right,
                 TileSide.Left => this.Left,
+                _ => throw new ArgumentOutOfRangeException("TileSide")
+            };
+        }
+
+        public (int x, int y) GetNeighborLocation(TileSide side)
+        {
+            return side switch
+            {
+                TileSide.Upper => (this.AbsoluteLocation.x, this.AbsoluteLocation.y + 1),
+                TileSide.Lower => (this.AbsoluteLocation.x, this.AbsoluteLocation.y - 1),
+                TileSide.Right => (this.AbsoluteLocation.x + 1, this.AbsoluteLocation.y),
+                TileSide.Left => (this.AbsoluteLocation.x - 1, this.AbsoluteLocation.y),
                 _ => throw new ArgumentOutOfRangeException("TileSide")
             };
         }

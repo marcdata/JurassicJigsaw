@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JurassicApp.Models
 {
@@ -13,10 +14,11 @@ namespace JurassicApp.Models
         {
             InitialTileFrame = initial ?? throw new ArgumentNullException(nameof(initial));
 
+            InitialTileFrame.AbsoluteLocation = (0, 0);
+
             TileFrames = new List<TileFrame>();
             TileFrames.Add(initial);
         }
-
 
         public TileFrame GetUpperLeftCorner()
         {
@@ -48,6 +50,16 @@ namespace JurassicApp.Models
                 currTile = currTile.Upper;
             }
             return currTile;
+        }
+
+        public TileFrame GetUpperRightCorner_Alt()
+        {
+            var tileUR = this.TileFrames
+                .OrderByDescending(z => z.AbsoluteLocation.x)
+                .OrderByDescending(z => z.AbsoluteLocation.y)
+                .FirstOrDefault();
+
+            return tileUR;
         }
 
         public TileFrame GetLowerLeftCorner()

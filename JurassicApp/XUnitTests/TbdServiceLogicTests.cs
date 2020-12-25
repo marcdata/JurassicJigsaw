@@ -80,7 +80,7 @@ namespace XUnitTests
             var tileFrameSet = new TileFrameSet(startingTileFrame);
 
             // act 
-            var searchSucceded = _tileFrameSearchService.FillTileFrameSet(tileFrameSet, remainingTiles);
+            var searchSucceded = _tileFrameSearchService.FillTileFrameSet(tileFrameSet, remainingTiles, allowTransformations: false);
 
             // assert
             Assert.True(searchSucceded);
@@ -145,7 +145,7 @@ namespace XUnitTests
             var tileFrameSet = new TileFrameSet(startingTileFrame);
 
             // act 
-            var searchSucceded = _tileFrameSearchService.FillTileFrameSet(tileFrameSet, remainingTiles);
+            var searchSucceded = _tileFrameSearchService.FillTileFrameSet(tileFrameSet, remainingTiles, allowTransformations: false);
 
             // assert
             Assert.True(searchSucceded);

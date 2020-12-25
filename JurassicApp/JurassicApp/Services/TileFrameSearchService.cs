@@ -9,7 +9,7 @@ namespace JurassicApp.Services
 {
     public interface ITileFrameSearchService
     {
-        public bool FillTileFrameSet(TileFrameSet tileframeset, IEnumerable<Tile> tiles);
+        public bool FillTileFrameSet(TileFrameSet tileframeset, IEnumerable<Tile> tiles, bool allowTransforms = false, bool verbose = true);
     }
 
     public class TileFrameSearchService : ITileFrameSearchService
@@ -19,11 +19,12 @@ namespace JurassicApp.Services
         /// </summary>
         /// <param name="tileframeset"></param>
         /// <param name="tiles"></param>
+        /// <param name="allowTransformations">Whether search allows rotations and flips (useful for simpler test cases)</param>
         /// <returns></returns>
-        public bool FillTileFrameSet(TileFrameSet tileFrameSet, IEnumerable<Tile> tiles)
+        public bool FillTileFrameSet(TileFrameSet tileFrameSet, IEnumerable<Tile> tiles, bool allowTransformations = true, bool verbose = true)
         {
             var tileQueue = new Queue<Tile>(tiles);
-            var maxIter = 100; // 1000000;
+            var maxIter = 100_000; // 1000000;
             var iterCount = 0;
 
             // steps
@@ -43,39 +44,52 @@ namespace JurassicApp.Services
                 var thisIterationSearchCollection = tileFrameSet.TileFrames.Where(x => x.AnyOpenSides).ToList();
                 foreach (var openFrame in thisIterationSearchCollection)
                 {
-                    //if(this.FindMatchingSide(openFrame, tile, out var side))
-                    //{
-                    //    Attach(openFrame, tile, side.Value);
-                    //    // attach to TileFrames
-                    //    tileFrameSet.TileFrames.Add(openFrame.GetNeighbor(side.Value));
-                    //    foundMatch = true;
+                    // let allowTransforms flag toggle simple/advanced mode
 
-                    //    // collect dbg statements
-
-                    //    break;
-                    //}
-
-                    if (this.FindMatchingSide(openFrame, tile, out var side, out var tileWithTransforms))
+                    if (allowTransformations == false)
                     {
-                        Attach(openFrame, tileWithTransforms, side.Value);
-                        // attach to TileFrames
-                        tileFrameSet.TileFrames.Add(openFrame.GetNeighbor(side.Value));
-                        foundMatch = true;
+                        if (this.FindMatchingSide(openFrame, tile, out var side))
+                        {
+                            Attach(openFrame, tile, side.Value);
+                            // attach to TileFrames
+                            tileFrameSet.TileFrames.Add(openFrame.GetNeighbor(side.Value));
+                            foundMatch = true;
 
-                        // collect dbg statements
+                            // collect dbg statements
 
-                        break;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (this.FindMatchingSide(openFrame, tile, out var side, out var tileWithTransforms))
+                        {
+                            Attach(openFrame, tileWithTransforms, side.Value);
+                            // attach to TileFrames
+                            tileFrameSet.TileFrames.Add(openFrame.GetNeighbor(side.Value));
+
+                            // propagate absolute location from known openFrame item to new TileFrame
+                            var neighborLocation = openFrame.GetNeighborLocation(side.Value);
+
+                            openFrame.GetNeighbor(side.Value).AbsoluteLocation = neighborLocation;
+
+                            foundMatch = true;
+
+                            // collect dbg statements
+
+                            break;
+                        }
                     }
                 }
-
-                //if (tileQueue.Count == 0)
-                //{
-                //    throw new Exception("Infinite loop probably happening; not matching final element.");
-                //}
 
                 if (!foundMatch)
                 {
                     tileQueue.Enqueue(tile);
+                }
+
+                if(iterCount % 1000 == 0)
+                {
+                    Console.WriteLine($"Checkpoint, iterations: {iterCount}. Number in set: {tileFrameSet.TileFrames.Count}, number in queue: {tileQueue.Count}");
                 }
 
                 ++iterCount;
