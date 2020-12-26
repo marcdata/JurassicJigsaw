@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using JurassicApp.Models;
 
@@ -29,6 +30,15 @@ namespace JurassicApp.IO
 
                         tileMiddleBuilder = new TileMiddleBuilder();
                     }
+                }
+
+                try
+                {
+                    var tile = tileMiddleBuilder.ToTile();
+                    tiles.Add(tile);
+                }
+                catch(Exception ex) { 
+                    // no op 
                 }
             };
 
