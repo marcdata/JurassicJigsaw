@@ -5,7 +5,12 @@ using JurassicApp.Models;
 
 namespace JurassicApp.IO
 {
-    public partial class JurassicFileReader
+    public interface IJurassicFileReader
+    {
+        public List<Tile> Read(string filename);
+    }
+
+    public class JurassicFileReader : IJurassicFileReader
     {
         public List<Tile> Read(string filename)
         {
@@ -37,7 +42,7 @@ namespace JurassicApp.IO
                     var tile = tileMiddleBuilder.ToTile();
                     tiles.Add(tile);
                 }
-                catch(Exception ex) { 
+                catch(Exception) { 
                     // no op 
                 }
             };

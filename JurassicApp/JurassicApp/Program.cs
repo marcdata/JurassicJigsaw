@@ -10,45 +10,36 @@ namespace JurassicApp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello Jurassic World!");
+            Console.WriteLine($"Begin Jurassic App. Timestamp: {DateTime.Now}");
 
-            // var filename = @"C:\Users\marc\source\repos\marcdata\JurassicJigsaw\inputdata\input.txt";
+            // small sample input, 9 tiles
             var filename = @"C:\Users\marc\source\repos\marcdata\JurassicJigsaw\inputdata\sampleinput.txt";
+
+            // the test case, ie, the problem to solve for, unknown answer.
+            // var filename = @"C:\Users\marc\source\repos\marcdata\JurassicJigsaw\inputdata\input.txt";
 
             // echo input:
             // Echo(filename);
 
-            // TBD, do fileread; tile arrangement; calc the corner multiplier
+            var solver = JurassicSolver.GetDefaultSolver();
 
-            // steps outline: 
-            // get tiles
-            // arrange tiles into a TileGrid
-            // select out the four corners
-            // -- multiply that value out for the answer.
-
-            var arbitrarySkipCount = 0;
-
-
-            // this is off by one. On sample data is 8, should be 9.
-            var tileInput = new JurassicFileReader().Read(filename);
-
-            var initialTile = tileInput.Skip(arbitrarySkipCount).FirstOrDefault();
-
-            tileInput.Remove(initialTile);
-
-            var initialTileFrame = new TileFrame(initialTile);
-            var tileFrameSet = new TileFrameSet(initialTileFrame);
-
-            var searchService = new TileFrameSearchService();
-
-            var result = searchService.FillTileFrameSet(tileFrameSet, tileInput, allowTransformations: true);
+            (var result, var cornerProduct) = solver.SolveForFile(filename);
 
             Console.WriteLine($"Search service organizing result: {result}");
 
-            var cornerTileIds = tileFrameSet.GetCornerTileIds();
+            Console.Write($"Solved answer: {cornerProduct}");
+
+            var tileIdsAndCoordinates = solver.GetTileFrameSet().TileFrames.Select(x => (x.TileId, x.AbsoluteLocation.x, x.AbsoluteLocation.y)).ToList();
+
+            Console.WriteLine($"TileIds and locations:");
+            tileIdsAndCoordinates.ForEach(x => Console.WriteLine($"TileId: {x.TileId}, xloc: {x.x}, yloc: {x.y}"));
+
+            var cornerTileIds = solver.GetTileFrameSet().GetCornerTileIds();
 
             Console.WriteLine("Corner tile ids:");
             cornerTileIds.ForEach(x => Console.WriteLine($"TileId: {x}"));
+
+            Console.Write($"Corner product: {cornerProduct}");
         }
 
         public static void Echo(string filename)

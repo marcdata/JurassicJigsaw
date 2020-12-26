@@ -20,39 +20,8 @@ namespace JurassicApp.Models
             TileFrames.Add(initial);
         }
 
-        public TileFrame GetUpperLeftCorner()
-        {
-            var currTile = this.InitialTileFrame;
-
-            while(currTile.Left != null)
-            {
-                currTile = currTile.Left;
-            }
-
-            while(currTile.Upper != null)
-            {
-                currTile = currTile.Upper;
-            }
-
-            return currTile;
-        }
 
         public TileFrame GetUpperRightCorner()
-        {
-            var currTile = this.InitialTileFrame;
-
-            while(currTile.Right != null)
-            {
-                currTile = currTile.Right;
-            }
-            while(currTile.Upper != null)
-            {
-                currTile = currTile.Upper;
-            }
-            return currTile;
-        }
-
-        public TileFrame GetUpperRightCorner_Alt()
         {
             var tileUR = this.TileFrames
                 .OrderByDescending(z => z.AbsoluteLocation.x)
@@ -62,39 +31,103 @@ namespace JurassicApp.Models
             return tileUR;
         }
 
+        public TileFrame GetUpperLeftCorner()
+        {
+            var tileUR = this.TileFrames
+                .OrderBy(z => z.AbsoluteLocation.x)
+                .OrderByDescending(z => z.AbsoluteLocation.y)
+                .FirstOrDefault();
+
+            return tileUR;
+        }
+
         public TileFrame GetLowerLeftCorner()
         {
-            var currTile = this.InitialTileFrame;
+            var tileUR = this.TileFrames
+                .OrderBy(z => z.AbsoluteLocation.x)
+                .OrderBy(z => z.AbsoluteLocation.y)
+                .FirstOrDefault();
 
-            while (currTile.Left != null)
-            {
-                currTile = currTile.Left;
-            }
-
-            while (currTile.Lower != null)
-            {
-                currTile = currTile.Lower;
-            }
-
-            return currTile;
-
+            return tileUR;
         }
 
         public TileFrame GetLowerRightCorner()
         {
-            var currTile = this.InitialTileFrame;
+            var tileUR = this.TileFrames
+                .OrderByDescending(z => z.AbsoluteLocation.x)
+                .OrderBy(z => z.AbsoluteLocation.y)
+                .FirstOrDefault();
 
-            while (currTile.Right != null)
-            {
-                currTile = currTile.Right;
-            }
-            while (currTile.Lower != null)
-            {
-                currTile = currTile.Lower;
-            }
-            return currTile;
-
+            return tileUR;
         }
+
+        // ... something not right here, bc we aren't attaching every tile to all the neighbors on add.
+
+        //public TileFrame GetUpperLeftCornerByWalking()
+        //{
+        //    var currTile = this.InitialTileFrame;
+
+        //    while (currTile.Left != null)
+        //    {
+        //        currTile = currTile.Left;
+        //    }
+
+        //    while (currTile.Upper != null)
+        //    {
+        //        currTile = currTile.Upper;
+        //    }
+
+        //    return currTile;
+        //}
+
+        //public TileFrame GetUpperRightCornerByWalking()
+        //{
+        //    var currTile = this.InitialTileFrame;
+
+        //    while (currTile.Right != null)
+        //    {
+        //        currTile = currTile.Right;
+        //    }
+        //    while (currTile.Upper != null)
+        //    {
+        //        currTile = currTile.Upper;
+        //    }
+        //    return currTile;
+        //}
+
+        //public TileFrame GetLowerLeftCornerByWalking()
+        //{
+        //    var currTile = this.InitialTileFrame;
+
+        //    while (currTile.Left != null)
+        //    {
+        //        currTile = currTile.Left;
+        //    }
+
+        //    while (currTile.Lower != null)
+        //    {
+        //        currTile = currTile.Lower;
+        //    }
+
+        //    return currTile;
+
+        //}
+
+        //public TileFrame GetLowerRightCornerByWalking()
+        //{
+        //    var currTile = this.InitialTileFrame;
+
+        //    while (currTile.Right != null)
+        //    {
+        //        currTile = currTile.Right;
+        //    }
+        //    while (currTile.Lower != null)
+        //    {
+        //        currTile = currTile.Lower;
+        //    }
+        //    return currTile;
+
+        //}
 
         public List<int> GetCornerTileIds()
         {
