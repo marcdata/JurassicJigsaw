@@ -148,6 +148,20 @@ namespace JurassicApp.Services
                 tileWithTransforms = flippedUD;
                 return true;
             }
+
+            // combination rotation+flip
+            foreach (var rotationNumber in rotationCounts)
+            {
+                var tileWithRotations = Tile.Rotate(flippedUD, rotationNumber);
+
+                if (FindMatchingSide(openFrame, tileWithRotations, out side))
+                {
+                    tileWithTransforms = tileWithRotations;
+                    return true;
+                }
+            }
+
+
             return false;
         }
 

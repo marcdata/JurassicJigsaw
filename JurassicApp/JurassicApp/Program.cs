@@ -13,10 +13,10 @@ namespace JurassicApp
             Console.WriteLine($"Begin Jurassic App. Timestamp: {DateTime.Now}");
 
             // small sample input, 9 tiles
-            var filename = @"C:\Users\marc\source\repos\marcdata\JurassicJigsaw\inputdata\sampleinput.txt";
+            // var filename = @"C:\Users\marc\source\repos\marcdata\JurassicJigsaw\inputdata\sampleinput.txt";
 
             // the test case, ie, the problem to solve for, unknown answer.
-            // var filename = @"C:\Users\marc\source\repos\marcdata\JurassicJigsaw\inputdata\input.txt";
+            var filename = @"C:\Users\marc\source\repos\marcdata\JurassicJigsaw\inputdata\input.txt";
 
             // echo input:
             // Echo(filename);
