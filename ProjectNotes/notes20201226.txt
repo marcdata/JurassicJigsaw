@@ -1,0 +1,94 @@
+
+### Project notes -- Jurassic App
+
+## Advent of Code : Day 20 
+
+Status check on 2020-12-26
+
+Next items: 
+
+Basic gap here: not solving the problem case. 
+We are getting ~ 50% of tiles read in, and arranged.. 
+but a gap on attaching the rest of the tiles to the growing-set. 
+
+So, a gap on matching logic. 
+
+1. Run aganst the sample input (9 tile case) again. 
+ X. done. 
+ 
+2. get a FileSolver class:
+ - re-run against sample input (9)
+ - done; passing.
+ - augment sample input for a more complicated case, and solve that? 
+ 
+3. Get combination of rotation and flips. 
+[ ]  Next up.
+
+4. To help figure out where we are: 
+
+- run a 'verify adjacency' on a TileSet in the middle, 
+to doublecheck we aren't running into a bad path. 
+ 
+- do output by tileid for the growing set.   
+
+
+-------
+
+When its stuck: 
+Begin Jurassic App. Timestamp: 12/26/2020 4:30:59 PM
+Checkpoint, iterations: 0. Number in set: 1, number in queue: 143
+Checkpoint, iterations: 1000. Number in set: 40, number in queue: 104
+Checkpoint, iterations: 2000. Number in set: 40, number in queue: 104
+Checkpoint, iterations: 3000. Number in set: 40, number in queue: 104
+Checkpoint, iterations: 4000. Number in set: 40, number in queue: 104
+Checkpoint, iterations: 5000. Number in set: 40, number in queue: 104
+Checkpoint, iterations: 6000. Number in set: 40, number in queue: 104
+Checkpoint, iterations: 7000. Number in set: 40, number in queue: 104
+
+-----
+
+after Rotation+flips
+TileId: 1907, xloc: -10, yloc: 5
+Corner tile ids:
+TileId: 2833
+TileId: 2239
+TileId: 1367
+TileId: 3359
+Corner product: 29125888761511
+
+Doh, that was only part 1. 
+
+That's the right answer! You are one gold star closer to saving your vacation. [Continue to Part Two]
+
+----------------------------------
+
+---- our Answer: 
+
+Assemble the tiles into an image. What do you get if you multiply together the IDs of the four corner tiles?
+
+Your puzzle answer was 29125888761511.
+
+-----------------------------------
+
+Part II: 
+
+So, upshot: take the output from Part 1, remove "tile edges", count SeaMonsters, and then find number of # from remaining image. 
+
+Breakdown by parts: 
+1 - remove tile frames from individual tiles 
+2 - concatenate all the tiles into one main image 
+3 - get an image detector (2d detection of SeaMonster) within a 2d set
+[ ] get a unit test for this for sample data 
+
+4 - get a 2d space where we can filter out individual "0" type values
+5 - count elements in remaining 2d image. 
+
+Misc: 
+- maybe get a more normal 2d image data format [,]
+- basically want elementwise and operation on TargetImage (TargetPattern) and SourceImage (SourceData)
+
+- get a way to print out to console the concatated tiles image. 
+  - TileFrameSet ::AsSingleTile  / then get cell contents from that as needed.
+  
+
+

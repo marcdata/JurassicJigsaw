@@ -97,6 +97,37 @@ namespace JurassicApp.Models
             }
         }
 
+        public int NumRows
+        {
+            get
+            {
+                return ContentRows.Count();
+            }
+        }
+
+        /// <summary>
+        /// Return a new Tile, with the contents of the source tile, with the outer edges removed.
+        /// </summary>
+        /// <returns></returns>
+        public Tile DeFramed()
+        {
+            // outline: 
+            // for rows (except first, and last row)
+            // for columns (except first and last element)
+            // pipe to output
+
+            List<List<CellValue>> newContents = new List<List<CellValue>>();
+            var rowLen = this.ContentRows.Count;
+
+            foreach(var row in ContentRows.Skip(1).Where (x => x != ContentRows.LastOrDefault()))
+            {
+                var newRow = row.Skip(1).Take(rowLen - 2).ToList();
+                newContents.Add(newRow);
+            }
+
+            return new Tile(this.TileNumber, newContents);
+        }
+
         public override string ToString()
         {
             var mapper = new CellMapper();
@@ -211,6 +242,15 @@ namespace JurassicApp.Models
             }
 
             return new Tile(tile.TileNumber, newContents);
+        }
+
+        /// <summary>
+        /// Expose internal data for re-structuring of data within the TileFrameSet.
+        /// </summary>
+        /// <returns></returns>
+        internal IReadOnlyList<IReadOnlyList<CellValue>> GetContentRows()
+        {
+            return this.ContentRows;
         }
 
         private static void AppendRight(List<List<CellValue>> newContents, List<CellValue> col)

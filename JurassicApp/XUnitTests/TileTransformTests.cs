@@ -98,5 +98,22 @@ namespace XUnitTests
             var _ = flipped.ToString();
         }
 
+        [Fact]
+        public void VerifyDeFraming()
+        {
+            // arrange 
+            var tileIn = new Tile(1, new List<string> { "####", "#..#", "#..#.", "####" });
+
+            // act
+            var tileOut = tileIn.DeFramed();
+
+            // assert
+            Assert.True(tileOut.TopExposure.Match(new List<CellValue> { CellValue.Dot, CellValue.Dot }));
+            Assert.True(tileOut.LowerExposure.Match(new List<CellValue> { CellValue.Dot, CellValue.Dot }));
+            Assert.True(tileOut.RightExposure.Match(new List<CellValue> { CellValue.Dot, CellValue.Dot }));
+            Assert.True(tileOut.LeftExposure.Match(new List<CellValue> { CellValue.Dot, CellValue.Dot }));
+
+        }
+
     }
 }

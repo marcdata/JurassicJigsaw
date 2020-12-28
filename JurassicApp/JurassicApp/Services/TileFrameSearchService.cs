@@ -50,9 +50,7 @@ namespace JurassicApp.Services
                     {
                         if (this.FindMatchingSide(openFrame, tile, out var side))
                         {
-                            Attach(openFrame, tile, side.Value);
-                            // attach to TileFrames
-                            tileFrameSet.TileFrames.Add(openFrame.GetNeighbor(side.Value));
+                            tileFrameSet.Attach(openFrame, new TileFrame(tile), side.Value);
                             foundMatch = true;
 
                             // collect dbg statements
@@ -64,18 +62,10 @@ namespace JurassicApp.Services
                     {
                         if (this.FindMatchingSide(openFrame, tile, out var side, out var tileWithTransforms))
                         {
-                            Attach(openFrame, tileWithTransforms, side.Value);
-                            // attach to TileFrames
-                            tileFrameSet.TileFrames.Add(openFrame.GetNeighbor(side.Value));
-
-                            // propagate absolute location from known openFrame item to new TileFrame
-                            var neighborLocation = openFrame.GetNeighborLocation(side.Value);
-
-                            openFrame.GetNeighbor(side.Value).AbsoluteLocation = neighborLocation;
-
+                            tileFrameSet.Attach(openFrame, new TileFrame(tileWithTransforms), side.Value);
                             foundMatch = true;
 
-                            // collect dbg statements
+                            // collect dbg statements (as needed)
 
                             break;
                         }
@@ -198,6 +188,7 @@ namespace JurassicApp.Services
 
         }
 
+        [Obsolete("Use new refactored method of the TileFrameSet instead.", false)]
         private void Attach(TileFrame openFrame, Tile tile, TileSide side)
         {
             if (side == TileSide.Upper && openFrame.Upper == null)
