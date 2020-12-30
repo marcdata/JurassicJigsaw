@@ -14,6 +14,7 @@ namespace JurassicApp
 
             // small sample input, 9 tiles
             // var filename = @"C:\Users\marc\source\repos\marcdata\JurassicJigsaw\inputdata\sampleinput.txt";
+            // known water roughness: 273
 
             // the test case, ie, the problem to solve for, unknown answer.
             var filename = @"C:\Users\marc\source\repos\marcdata\JurassicJigsaw\inputdata\input.txt";
@@ -39,7 +40,23 @@ namespace JurassicApp
             Console.WriteLine("Corner tile ids:");
             cornerTileIds.ForEach(x => Console.WriteLine($"TileId: {x}"));
 
-            Console.Write($"Corner product: {cornerProduct}");
+            Console.WriteLine($"Corner product: {cornerProduct}");
+
+            // Part 2
+
+            var asSingleTile = solver.GetTileFrameSet().AsSingleTile();
+
+            // do detection 
+
+            var monsterCount = new DetectionService().CountOccurences(asSingleTile, DefaultTargetPatterns.SeaMonster(), searchRotations: true);
+
+            Console.WriteLine($"Sea monster count: {monsterCount}");
+
+            // count Roughness
+            var waterRoughness = new RoughnessSolver().WaterRoughness(asSingleTile, monsterCount, DefaultTargetPatterns.SeaMonster());
+
+            Console.WriteLine($"Water roughness (final answer): {waterRoughness}");
+
         }
 
         public static void Echo(string filename)

@@ -11,8 +11,6 @@ namespace JurassicApp.Models
     {
         public int TileNumber { get; private set; }
 
-        // private List<string> RawRows { get; set; }
-
         private List<List<CellValue>> ContentRows { get; set; }
 
         /* A tile really has:
@@ -71,6 +69,33 @@ namespace JurassicApp.Models
         }
 
         /// <summary>
+        /// Get subsection as separate Tile. 
+        /// R and C count rows, cols from upper left corner.
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="c"></param>
+        /// <param name="numRows"></param>
+        /// <param name="numCols"></param>
+        /// <returns></returns>
+        public Tile GetSubsection(int r, int c, int numRows, int numCols)
+        {
+            // consider bounds check 
+
+            var rows = this.ContentRows.Skip(r).Take(numRows);
+
+            var contentsOut = new List<List<CellValue>>();
+
+            foreach(var row in rows)
+            {
+                var newRow = row.Skip(c).Take(numCols).ToList();
+                contentsOut.Add(newRow);
+            }
+
+            return new Tile(0, contentsOut);
+            
+        }
+
+        /// <summary>
         /// Left exposure, in order of top-down
         /// </summary>
         public List<CellValue> LeftExposure
@@ -103,6 +128,22 @@ namespace JurassicApp.Models
             {
                 return ContentRows.Count();
             }
+        }
+
+        /// <summary>
+        /// Number of columns in the first row (elements in first row).
+        /// </summary>
+        public int NumCols
+        {
+            get
+            {
+                return ContentRows.FirstOrDefault()?.Count() ?? 0;
+            }
+        }
+
+        public int NumElementsEqual(CellValue comparisonValue)
+        {
+            return ContentRows.SelectMany(x => x).Where(y => y == comparisonValue).Count();
         }
 
         /// <summary>

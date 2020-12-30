@@ -115,5 +115,19 @@ namespace XUnitTests
 
         }
 
+        [Fact]
+        public void GetSubsectionTest()
+        {
+            // arrange 
+            var tileIn = new Tile(1, new List<string> { "###", "#..", "#.." });
+
+            // act 
+            var subsection = tileIn.GetSubsection(1, 1, 2, 2);
+
+            // assert
+            Assert.True(subsection.TopExposure.Match(new List<CellValue> { CellValue.Dot, CellValue.Dot }));
+            Assert.True(subsection.LowerExposure.Match(new List<CellValue> { CellValue.Dot, CellValue.Dot }));
+
+        }
     }
 }
