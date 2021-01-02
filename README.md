@@ -66,4 +66,4 @@ In the repo, in the InputData folder, there are two samples input files:
 2. input.txt - the "test set" input, where the correct answer was not provided.
 
 ## Acknowledgements
-Special thanks to Eric Wastl and the team over at Advent of Code for putting together the event, coming up with intereting puzzles, and trying to promote a healthy dev community. 
+Special thanks to Eric Wastl and the team over at Advent of Code for putting together the event, coming up with interesting puzzles, and trying to promote a healthy dev community. 
