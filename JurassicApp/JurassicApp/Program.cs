@@ -12,6 +12,11 @@ namespace JurassicApp
         {
             // walk thru setup and invocation for a problem solver for Jurassic App
             // handle both parts 1 & 2 of their Advent Day challenge, day 20
+            // 
+            // goal here: to get the answer for Advent Day 20 challenge; 
+            // for which we only have two actual input files,
+            // so uses supplying their own input files to this app could theoretically happen
+            // but isn't likely.
 
             Console.WriteLine($"Begin Jurassic App. Timestamp: {DateTime.Now}");
 
