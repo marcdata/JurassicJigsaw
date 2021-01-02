@@ -23,8 +23,6 @@ namespace JurassicApp.IO
         public Tile ToTile()
         {
             var number = int.Parse(rawRows.FirstOrDefault().Split(" ")[1].Trim(':'));
-            //var contentRows = rawRows.Skip(1);
-            //return new Tile(number, contentRows.ToList());
 
             var contentRows = new List<List<CellValue>>();
             var mapper = new CellMapper();

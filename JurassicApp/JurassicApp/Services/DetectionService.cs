@@ -37,9 +37,7 @@ namespace JurassicApp.Services
                 maxMonstersFound = simpleMonstersDetected; 
             }
 
-            // var workingTile = originalTile.GetSubsection(0, 0, originalTile.NumRows, originalTile.NumCols);
-
-            // for each rotation, try one normal, and one flipped; should cover total space.
+            // for each rotation, try one normal, and two flips (one LR, one UD)
             for(int k = 0; k < 4; ++k)
             {
                 var rotated = (k == 0) ? originalTile : Tile.Rotate(originalTile, k);
@@ -52,13 +50,12 @@ namespace JurassicApp.Services
 
                 var rotatedAndFlipped = Tile.FlipLR(rotated);
 
-                var countInFlipped = CountOccurences(rotatedAndFlipped, target);
-                if(countInFlipped > maxMonstersFound) 
+                var countInFlippedLr = CountOccurences(rotatedAndFlipped, target);
+                if(countInFlippedLr > maxMonstersFound) 
                 { 
-                    maxMonstersFound = countInFlipped; 
+                    maxMonstersFound = countInFlippedLr; 
                 }
 
-                // flipUD
                 var rotatedAndFlippedUd = Tile.FlipUD(rotated);
 
                 var countInFlippedUd = CountOccurences(rotatedAndFlippedUd, target);
@@ -74,16 +71,6 @@ namespace JurassicApp.Services
 
         public int CountOccurences(Tile source, Tile target)
         {
-            // get source.SubMatrix of size matching target (row x col)
-            // iterate over possible matching areas (row and col, less size of target)
-            // detect a match, if all contents of target match source
-            // alt, detect a match if, all contents of target and those contents match another filter (arg in), then that is a detection
-
-            // outline:
-            // iterate over upperleft starting coordinates (source rowsize, less target size)
-            // get submatrix of the source
-            // if that matches target, then a match
-
             return FindOccurences(source, target).Count;
         }
 
@@ -95,6 +82,12 @@ namespace JurassicApp.Services
         /// <returns></returns>
         public List<(int xcoord, int ycoord)> FindOccurences(Tile source, Tile target)
         {
+            // outline:
+            // iterate over upperleft starting coordinates (source rowsize, less target size)
+            // get submatrix of the source
+            // detect a match, if all contents of target match source
+            // if that matches target, then a match
+
             var numRowsToSearch = source.NumRows - target.NumRows + 1;
             var numColsToSearch = source.NumCols - target.NumCols + 1;
 

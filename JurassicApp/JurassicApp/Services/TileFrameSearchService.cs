@@ -188,7 +188,7 @@ namespace JurassicApp.Services
 
         }
 
-        [Obsolete("Use new refactored method of the TileFrameSet instead.", false)]
+        [Obsolete("Use new refactored method of the TileFrameSet instead.", true)]
         private void Attach(TileFrame openFrame, Tile tile, TileSide side)
         {
             if (side == TileSide.Upper && openFrame.Upper == null)

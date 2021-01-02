@@ -4,6 +4,9 @@ using System.Text;
 
 namespace JurassicApp.Models
 {
+    /// <summary>
+    /// Middle model. Contains a Tile; responsibilities around tracking neighbors, location.
+    /// </summary>
     public class TileFrame
     {
         public Tile Tile { get; set; }
@@ -53,6 +56,5 @@ namespace JurassicApp.Models
                 _ => throw new ArgumentOutOfRangeException("TileSide")
             };
         }
-
     }
 }

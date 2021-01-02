@@ -10,25 +10,35 @@ namespace JurassicApp
     {
         static void Main(string[] args)
         {
+            // walk thru setup and invocation for a problem solver for Jurassic App
+            // handle both parts 1 & 2 of their Advent Day challenge, day 20
+
             Console.WriteLine($"Begin Jurassic App. Timestamp: {DateTime.Now}");
 
-            // small sample input, 9 tiles
-            // var filename = @"C:\Users\marc\source\repos\marcdata\JurassicJigsaw\inputdata\sampleinput.txt";
-            // known water roughness: 273
+            // use sample file (known answer), or their test file
+            // small sample input, 9 tiles; known water roughness: 273
 
-            // the test case, ie, the problem to solve for, unknown answer.
-            var filename = @"C:\Users\marc\source\repos\marcdata\JurassicJigsaw\inputdata\input.txt";
+            var toggleUseTestFile = false;
+            var filename = toggleUseTestFile
+                ? @"..\..\..\..\..\..\JurassicJigsaw\inputdata\sampleinput.txt"
+                : @"..\..\..\..\..\..\JurassicJigsaw\inputdata\input.txt";
 
-            // echo input:
-            // Echo(filename);
+            // if filename passed in thru CLI, use that tho
+            if (args.ToList().Any())
+            {
+                var fileArgIn = args[0];
+                filename = fileArgIn;
+            }
 
+            Console.WriteLine($"Solving Jurassic tile detection for file: {filename}");
+
+            // Part 1
             var solver = JurassicSolver.GetDefaultSolver();
 
             (var result, var cornerProduct) = solver.SolveForFile(filename);
 
             Console.WriteLine($"Search service organizing result: {result}");
-
-            Console.Write($"Solved answer: {cornerProduct}");
+            Console.WriteLine($"Solved answer: {cornerProduct}");
 
             var tileIdsAndCoordinates = solver.GetTileFrameSet().TileFrames.Select(x => (x.TileId, x.AbsoluteLocation.x, x.AbsoluteLocation.y)).ToList();
 
@@ -43,16 +53,14 @@ namespace JurassicApp
             Console.WriteLine($"Corner product: {cornerProduct}");
 
             // Part 2
-
             var asSingleTile = solver.GetTileFrameSet().AsSingleTile();
 
-            // do detection 
-
+            // Do Detection 
             var monsterCount = new DetectionService().CountOccurences(asSingleTile, DefaultTargetPatterns.SeaMonster(), searchRotations: true);
 
             Console.WriteLine($"Sea monster count: {monsterCount}");
 
-            // count Roughness
+            // Count Roughness
             var waterRoughness = new RoughnessSolver().WaterRoughness(asSingleTile, monsterCount, DefaultTargetPatterns.SeaMonster());
 
             Console.WriteLine($"Water roughness (final answer): {waterRoughness}");

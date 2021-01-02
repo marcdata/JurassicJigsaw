@@ -7,6 +7,9 @@ using System.Text;
 
 namespace JurassicApp.Models
 {
+    /// <summary>
+    /// Lowest class in moel heirarchy. Tracks contents of actual tile; some manipulating methods for Rotation, Flip, etc. 
+    /// </summary>
     public class Tile
     {
         public int TileNumber { get; private set; }
@@ -21,21 +24,9 @@ namespace JurassicApp.Models
          * according to instructions, probably have to support rotations, flipping, etc
          */
 
-        //[Obsolete("Remove if not using.")]
-        //public Tile()
-        //{
-
-        //}
-
-        public Tile(int tileNumber)
-        {
-            TileNumber = tileNumber;
-        }
-
         public Tile(int tileNumber, List<string> rawRows)
         {
             TileNumber = tileNumber;
-            //RawRows = rawRows ?? throw new ArgumentNullException(nameof(rawRows));
 
             var mapper = new CellMapper();
 
@@ -56,7 +47,6 @@ namespace JurassicApp.Models
             // set other values, Upper, Lower, Left, Right... 
         }
 
-
         // Exposures: Upper and Lower orient from Left to Right;
         // Left and Right, orient from top to bottom
 
@@ -66,33 +56,6 @@ namespace JurassicApp.Models
             {
                 return ContentRows.Select(r => r.Last()).ToList();
             }
-        }
-
-        /// <summary>
-        /// Get subsection as separate Tile. 
-        /// R and C count rows, cols from upper left corner.
-        /// </summary>
-        /// <param name="r"></param>
-        /// <param name="c"></param>
-        /// <param name="numRows"></param>
-        /// <param name="numCols"></param>
-        /// <returns></returns>
-        public Tile GetSubsection(int r, int c, int numRows, int numCols)
-        {
-            // consider bounds check 
-
-            var rows = this.ContentRows.Skip(r).Take(numRows);
-
-            var contentsOut = new List<List<CellValue>>();
-
-            foreach(var row in rows)
-            {
-                var newRow = row.Skip(c).Take(numCols).ToList();
-                contentsOut.Add(newRow);
-            }
-
-            return new Tile(0, contentsOut);
-            
         }
 
         /// <summary>
@@ -144,6 +107,29 @@ namespace JurassicApp.Models
         public int NumElementsEqual(CellValue comparisonValue)
         {
             return ContentRows.SelectMany(x => x).Where(y => y == comparisonValue).Count();
+        }
+
+        /// <summary>
+        /// Get subsection as separate Tile. 
+        /// R and C count rows, cols from upper left corner.
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="c"></param>
+        /// <param name="numRows"></param>
+        /// <param name="numCols"></param>
+        /// <returns></returns>
+        public Tile GetSubsection(int r, int c, int numRows, int numCols)
+        {
+            var rows = this.ContentRows.Skip(r).Take(numRows);
+
+            var contentsOut = new List<List<CellValue>>();
+
+            foreach (var row in rows)
+            {
+                var newRow = row.Skip(c).Take(numCols).ToList();
+                contentsOut.Add(newRow);
+            }
+            return new Tile(0, contentsOut);
         }
 
         /// <summary>

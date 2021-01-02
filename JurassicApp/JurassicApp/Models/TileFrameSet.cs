@@ -5,16 +5,18 @@ using System.Linq;
 
 namespace JurassicApp.Models
 {
+    /// <summary>
+    /// Collection of TileFrames, outermost model class. 
+    /// Used for dynamically growing a set of TileFrames. 
+    /// </summary>
     public class TileFrameSet
     {
         public TileFrame InitialTileFrame { get; }
-
         public List<TileFrame> TileFrames { get; set; }
 
         public TileFrameSet(TileFrame initial)
         {
             InitialTileFrame = initial ?? throw new ArgumentNullException(nameof(initial));
-
             InitialTileFrame.AbsoluteLocation = (0, 0);
 
             TileFrames = new List<TileFrame>();
@@ -62,9 +64,7 @@ namespace JurassicApp.Models
             {
                 throw new InvalidOperationException("Error attaching tile; tile probably already in use.");
             }
-
         }
-
 
         public TileFrame GetUpperRightCorner()
         {
@@ -105,74 +105,6 @@ namespace JurassicApp.Models
 
             return tileUR;
         }
-
-        // ... something not right here, bc we aren't attaching every tile to all the neighbors on add.
-
-        //public TileFrame GetUpperLeftCornerByWalking()
-        //{
-        //    var currTile = this.InitialTileFrame;
-
-        //    while (currTile.Left != null)
-        //    {
-        //        currTile = currTile.Left;
-        //    }
-
-        //    while (currTile.Upper != null)
-        //    {
-        //        currTile = currTile.Upper;
-        //    }
-
-        //    return currTile;
-        //}
-
-        //public TileFrame GetUpperRightCornerByWalking()
-        //{
-        //    var currTile = this.InitialTileFrame;
-
-        //    while (currTile.Right != null)
-        //    {
-        //        currTile = currTile.Right;
-        //    }
-        //    while (currTile.Upper != null)
-        //    {
-        //        currTile = currTile.Upper;
-        //    }
-        //    return currTile;
-        //}
-
-        //public TileFrame GetLowerLeftCornerByWalking()
-        //{
-        //    var currTile = this.InitialTileFrame;
-
-        //    while (currTile.Left != null)
-        //    {
-        //        currTile = currTile.Left;
-        //    }
-
-        //    while (currTile.Lower != null)
-        //    {
-        //        currTile = currTile.Lower;
-        //    }
-
-        //    return currTile;
-
-        //}
-
-        //public TileFrame GetLowerRightCornerByWalking()
-        //{
-        //    var currTile = this.InitialTileFrame;
-
-        //    while (currTile.Right != null)
-        //    {
-        //        currTile = currTile.Right;
-        //    }
-        //    while (currTile.Lower != null)
-        //    {
-        //        currTile = currTile.Lower;
-        //    }
-        //    return currTile;
-
-        //}
 
         public List<int> GetCornerTileIds()
         {
@@ -225,8 +157,6 @@ namespace JurassicApp.Models
 
         (int ymin, int ymax) GetAbsoluteBoundsOnRows()
         {
-            // could reduce a few iterations here, but shouldn't really matter.
-
             var ymin = TileFrames.Min(x => x.AbsoluteLocation.y);
             var ymax = TileFrames.Max(x => x.AbsoluteLocation.y);
             return (ymin, ymax);
@@ -245,7 +175,6 @@ namespace JurassicApp.Models
                .Where(x => x.AbsoluteLocation.y == superRowAbsoluteY)
                .OrderBy(x => x.AbsoluteLocation.x).ToList();
         }
-
 
         /// <summary>
         /// Concatenate tiles into raw contents; concatenate in order as left-to-right.
@@ -274,23 +203,6 @@ namespace JurassicApp.Models
             }
 
             return newRows;
-
         }
-
-        //private class LocationReader
-        //{
-        //    private Dictionary<(int, int), TileFrame> _tileFramesByLocation;
-
-        //    public LocationReader(List<TileFrame> tileFrames)
-        //    {
-        //        _tileFramesByLocation = tileFrames.ToDictionary(x => x.AbsoluteLocation);
-        //    }
-
-        //    public TileFrame GetByLocation(int row, int col)
-        //    {
-        //        return _tileFramesByLocation[(row, col)];
-        //    }
-
-        //}
     }
 }

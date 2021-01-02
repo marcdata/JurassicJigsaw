@@ -7,7 +7,6 @@ using System.Text;
 
 namespace JurassicApp.Services
 {
-
     public interface IJurassicSolver
     {
         public (bool result, long cornerProduct) SolveForFile(string filename, bool verbose = true);
@@ -17,6 +16,8 @@ namespace JurassicApp.Services
     /// Class to support solving the problem re input to final answer (file, to multiple of the corner tile ids).
     /// Coordinates between the FileReader, and the SearchService. 
     /// Verbose output, suppressable. 
+    /// 
+    /// In the end, this only solves for Part I of the challenge. 
     /// </summary>
     public class JurassicSolver : IJurassicSolver
     {

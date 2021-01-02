@@ -6,7 +6,6 @@ using System.Text;
 
 namespace JurassicApp.Services
 {
-    
     public class RoughnessSolver
     {
         public int WaterRoughness(Tile source, int monstersDetected, Tile target)
